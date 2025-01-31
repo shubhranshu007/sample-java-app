@@ -1,24 +1,14 @@
-# Use an official OpenJDK image as a base image
+# Use an official OpenJDK runtime as a base image
 FROM openjdk:17-jdk-slim
 
-# Create a user and group to run the app
-RUN groupadd -r appgroup && useradd -r -g appgroup appuser
-
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the JAR file from the host to the container
-COPY  helloworld/target/helloworld-1.1.jar /app/your-application.jar
+# Copy the Spring Boot JAR file into the container
+COPY spring-boot-hello-world/target/spring-boot-2-hello-world-1.0.2-SNAPSHOT.jar app.jar
 
-# Change ownership of the JAR file to the appuser
-RUN chown appuser:appgroup /app/your-application.jar
-
-# Switch to the non-root user
-USER appuser
-
-# Expose port 8080 (or your application's port)
+# Expose the port the application runs on
 EXPOSE 8080
 
-# Command to run the JAR file
-CMD ["java", "-jar", "your-application.jar"]
-
+# Command to run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
